@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>進 Lab 第一課：BSL-2 規矩與鏈球菌實戰｜實驗室生存指南</title>
+
+  <!-- Reveal.js Core CSS (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+
+  <!-- Google Fonts: Noto Serif TC & Noto Sans TC for Japanese Minimalism -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       日式極簡風格 (Japanese Minimalism / Ma 間) 自訂樣式 (Inline Self-Contained)
+       背景：和紙白 (#FAF8F5) | 主字：深炭灰 (#2C2C2C)
+       強調：朱印紅 (#C83E2B) | 安全與綠能：松葉綠 (#3A5A40) | 輔字：灰墨 (#6E6A64)
+       ========================================================================== */
+    :root {
+      --bg-washi: #FAF8F5;
+      --bg-card: #F3EFEA;
+      --text-charcoal: #2C2C2C;
+      --text-muted: #6E6A64;
+      --accent-vermilion: #C83E2B;
+      --accent-pine: #3A5A40;
+      --border-hairline: #DED8CE;
+    }
+
+    body, .reveal-viewport {
+      background-color: var(--bg-washi) !important;
+      color: var(--text-charcoal);
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .reveal {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--text-charcoal);
+    }
+
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal .slides section {
+      padding: 40px 64px;
+      box-sizing: border-box;
+    }
+
+    /* 頁碼與頂部極簡章節標記 */
+    .slide-kicker {
+      font-size: 0.55em;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+    }
+
+    .slide-kicker::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 2px;
+      background-color: var(--accent-pine);
+    }
+
+    .slide-kicker.kicker-alert::before {
+      background-color: var(--accent-vermilion);
+    }
+
+    /* 主標題與副標題 */
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Noto Serif TC', serif;
+      color: var(--text-charcoal);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+      margin: 0 0 36px 0;
+      text-transform: none;
+    }
+
+    .reveal h1 {
+      font-size: 2.1em;
+      margin-bottom: 24px;
+    }
+
+    .reveal h2 {
+      font-size: 1.55em;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .reveal p {
+      line-height: 1.6;
+      margin: 0 0 20px 0;
+    }
+
+    /* 極簡點列清單（每頁不超過 3~4 點，單行大字留白） */
+    .minimal-list {
+      list-style: none !important;
+      margin: 28px 0 0 0 !important;
+      padding: 0 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .minimal-list li {
+      font-size: 1.05em;
+      line-height: 1.45;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-charcoal);
+    }
+
+    .minimal-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.52em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-pine);
+    }
+
+    .minimal-list li.redline {
+      color: var(--accent-vermilion);
+      font-weight: 500;
+    }
+
+    .minimal-list li.redline::before {
+      background-color: var(--accent-vermilion);
+      width: 10px;
+      height: 10px;
+      top: 0.48em;
+    }
+
+    /* 重點色文字 */
+    .hl-red {
+      color: var(--accent-vermilion);
+      font-weight: 700;
+    }
+
+    .hl-green {
+      color: var(--accent-pine);
+      font-weight: 700;
+    }
+
+    .tag-label {
+      display: inline-block;
+      font-size: 0.78em;
+      padding: 2px 10px;
+      border-radius: 3px;
+      font-weight: 700;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .tag-green {
+      background-color: rgba(58, 90, 64, 0.12);
+      color: var(--accent-pine);
+    }
+
+    .tag-red {
+      background-color: rgba(200, 62, 43, 0.12);
+      color: var(--accent-vermilion);
+    }
+
+    /* 雙欄極簡卡片佈局 */
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 24px;
+    }
+
+    .washi-card {
+      background-color: var(--bg-card);
+      border-left: 4px solid var(--accent-pine);
+      padding: 28px 32px;
+      border-radius: 2px;
+    }
+
+    .washi-card.card-alert {
+      border-left-color: var(--accent-vermilion);
+      background-color: rgba(200, 62, 43, 0.05);
+    }
+
+    .washi-card h3 {
+      font-size: 1.05em;
+      margin: 0 0 18px 0;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    .washi-card ul {
+      list-style: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .washi-card ul li {
+      font-size: 0.88em;
+      line-height: 1.45;
+    }
+
+    /* 數學公式橫幅 */
+    .formula-band {
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border-hairline);
+      border-bottom: 1px solid var(--border-hairline);
+      padding: 16px 28px;
+      margin: 18px 0 26px 0;
+      text-align: center;
+      font-size: 0.95em;
+    }
+
+    /* 封面專屬排版 */
+    .cover-wrap {
+      padding: 48px 0;
+      border-top: 2px solid var(--text-charcoal);
+      border-bottom: 1px solid var(--border-hairline);
+      margin-top: 32px;
+    }
+
+    .cover-sub {
+      font-size: 1.1em;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-top: 12px;
+    }
+
+    .cover-meta {
+      margin-top: 48px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65em;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* SVG 圖表容器 */
+    .svg-container {
+      width: 100%;
+      margin: 20px 0 28px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 右下角極簡講者備忘錄提示與切換面板 */
+    .notes-toggle-btn {
+      position: fixed;
+      bottom: 18px;
+      left: 24px;
+      z-index: 100;
+      background: rgba(250, 248, 245, 0.92);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-muted);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .notes-toggle-btn:hover {
+      color: var(--text-charcoal);
+      border-color: var(--text-charcoal);
+    }
+
+    .notes-drawer {
+      position: fixed;
+      bottom: 54px;
+      left: 24px;
+      width: min(680px, 88vw);
+      max-height: 44vh;
+      overflow-y: auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-left: 4px solid var(--accent-pine);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+      padding: 20px 26px;
+      z-index: 99;
+      display: none;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-charcoal);
+    }
+
+    .notes-drawer.open {
+      display: block;
+    }
+
+    .notes-drawer h4 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      color: var(--accent-pine);
+      letter-spacing: 0.05em;
+    }
+
+    .reveal .controls {
+      color: var(--accent-pine);
+    }
+
+    .reveal .progress {
+      background: var(--border-hairline);
+      color: var(--accent-pine);
+      height: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ====================================================================
+           Slide 01: 封面
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">BSL-2 Lab Orientation &amp; Biosafety Guide</div>
+        <div class="cover-wrap">
+          <h1>進 Lab 第一課：<br/>BSL-2 與鏈球菌實戰</h1>
+          <div class="cover-sub">給碩一新生與專題生的實驗室平安生存指南</div>
+        </div>
+        <div class="cover-meta">
+          <span>目標菌株：<em>Streptococcus</em> spp. (RG2)</span>
+          <span>核心精神：不懂就問別亂猜 · 綠色實驗室</span>
+          <span>按 [S] 或左下角按鈕開啟學長姐講稿與法規出處</span>
+        </div>
+
+        <aside class="notes">
+          <p><strong>【學長姐開場白】</strong></p>
+          <p>哈囉大家，歡迎加入我們實驗室！不管你是剛考進來的碩一新生，還是來做專題的大學生，接下來你們在 Lab 最常打交道的對象就是「鏈球菌屬（<em>Streptococcus</em> spp.）」。</p>
+          <p>在衛福部疾管署（CDC）的法規分級裡，我們養的鏈球菌屬於<strong>「第二級危險群（RG2）」</strong>——意思是它有機會讓你生病（例如咽喉炎、皮膚軟組織感染或侵入性感染），但只要守規矩、做好防護，它其實很安全，而且臨床上有明確的預防與治療方法。</p>
+          <p>這份簡報不會念死板的公文給大家聽，而是帶大家順一次我們最常做的 4 個實驗：<strong>BHI 厭氧靜置培養、分光光度計 OD550 定量、甲醇萃取色素、還有 -80°C 甘油冷凍保存</strong>。但在開始碰任何瓶瓶罐罐之前，下一頁要先告訴大家進我們 Lab 最重要的兩條保命天條！</p>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《感染性生物材料管理辦法》（115.04.30 修正）第 3 條第 2 款（p. 2）：第二級危險群（RG2）定義。</li>
+            <li>《感染性生物材料管理辦法》第 6 條第 2 款（p. 3）：第二等級生物安全實驗室（BSL-2）適用規範。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 02: 開場最高鐵則（不確定就先問 ＆ 綠色實驗室）
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker kicker-alert">Rule #01 · 全場最重要的一頁</div>
+        <h2>進 Lab 第一天就要刻在腦海的兩大鐵則</h2>
+
+        <div class="grid-two">
+          <div class="washi-card card-alert">
+            <h3 class="hl-red">🚨 鐵則一：有懷疑就先問，千萬別自己猜！</h3>
+            <ul>
+              <li>任何事只要有 <strong>1% 不確定</strong>，馬上問<strong>老師、助教或學長姐</strong></li>
+              <li><strong>被唸兩句頂多學個教訓；自己瞎猜猜錯，要付出慘痛代價！</strong></li>
+            </ul>
+          </div>
+
+          <div class="washi-card">
+            <h3 class="hl-green">🌱 鐵則二：綠色實驗室（Green Lab）</h3>
+            <ul>
+              <li><strong>隨手關機</strong>：儀器用完除非馬上有人續用，<strong>該關機就要關機</strong></li>
+              <li><strong>滅菌順風車</strong>：滅菌前先招呼大家湊鍋，<strong>別只滅一兩瓶純浪費</strong></li>
+              <li><strong>珍惜資源</strong>：水、電、藥劑、手套與耗材精準取用不鋪張</li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="notes">
+          <p><strong>【為什麼這頁擺在最前面？因為這比任何技術都重要！】</strong></p>
+          <p><strong>1. 鐵則一：在實驗室做任何事，只要有懷疑或不確定，一定先問！不要自己猜！</strong></p>
+          <ul>
+            <li>剛進實驗室什麼都不熟非常正常！不管你是忘記離心機怎麼配重、不確定手上的甲醇廢液該倒哪一桶、還是看不懂滅菌鍋的燈號，<strong>只要有一絲絲懷疑，請立刻停手，去問老師、助教或學長姐！</strong></li>
+            <li>千萬不要因為害羞、怕麻煩別人、或怕被罵就自己腦補瞎猜。請記住：<strong>開口問，就算被唸兩句「這上次講過囉」，你頂多摸摸鼻子學起來記取教訓；但如果你自己亂猜，猜錯的下場可能是高壓滅菌鍋氣爆、幾十萬的儀器報銷、自己跟同學感染送急診，甚至害整個 Lab 被衛生局罰款勒令停用！那個慘重代價誰都扛不起！</strong></li>
+            <li>依據《實驗室生物安全規範》第 4.3.8 條，未完成訓練與能力評估之人員，本來就必須在被授權人員監督與指導下才能操作。</li>
+          </ul>
+          <p><strong>2. 鐵則二：落實「綠色實驗室（Green Lab）」節約能源與資源</strong></p>
+          <ul>
+            <li><strong>儀器隨手關機</strong>：實驗室的分光光度計、離心機、生物安全櫃（BSC）、水浴槽、加熱器等，使用完畢後<strong>除非確定下一位同學馬上要接著用，否則該關機的就要隨手關機</strong>，別讓機器空轉耗電又折損壽命。</li>
+            <li><strong>滅菌鍋揪團搭順風車</strong>：高壓蒸氣滅菌鍋跑一趟要耗費大量水電與時間。<strong>滅菌前請務必在 Lab 群組或現場招呼一下：「我要開滅菌鍋囉，有沒有人要搭順風車？」</strong>千萬不要同一次只滅一兩瓶培養基或一小包垃圾，純屬浪費！（同時注意《滅菌過程確效作業指導手冊》p. 3 規定之代表性裝載量上限，且乾淨培養基與感染性垃圾分鍋滅）。</li>
+            <li><strong>珍惜水電藥劑與耗材</strong>：洗手洗瓶子隨手關水、藥劑精準秤量、手套與 Filter Tips 依需求合理使用不浪費。</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》（2021年版）第 4.3.1～4.3.10 條（人員訓練與監督，p. 41–42）、第 4.6.18 條（優良微生物操作規範，p. 46）。</li>
+            <li>《滅菌過程確效作業指導手冊》第二章一、二（代表性裝載型式與最小／最大裝載量研究，p. 2–3）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 03: 新手村任務（進場資格與穿搭底線）
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Access &amp; Qualification · 新手村入場券</div>
+        <h2>解鎖單獨做實驗的資格與穿搭底線</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">法定時數</span>
+            進 Lab <strong>3 個月內修滿 8 小時</strong>生安基本課（之後每年補修 <strong>4 小時</strong>）
+          </li>
+          <li>
+            <span class="tag-label tag-green">新手保護</span>
+            時數沒滿、技術還沒通過評估前，<strong>必須有授權學長姐在旁盯著</strong>才能動手
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">穿搭底線</span>
+            禁飲食手搖飲 · <strong>禁穿拖鞋／涼鞋／洞洞鞋</strong> · 禁隱形眼鏡與化妝 · 長髮請綁好
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>生安時數怎麼拿？</strong> 根據《感染性生物材料管理辦法》第 24 條與《115年查核作業手冊》p. 46 註 2，新進人員必須在進入實驗室後 <strong>3 個月內完成至少 8 小時</strong>生物安全及生物保全基本課程（可至疾管署 e 等公務園線上學習平台修課或參加校內課程），第 2 年起現職人員每年至少要修 <strong>4 小時</strong>繼續教育。</li>
+            <li><strong>別半夜自己偷做實驗</strong>：在還沒修完 8 小時並通過實驗室能力評估前，依《實驗室生物安全規範》第 4.3.8 條，絕對不能自己單獨進來做實驗，一定要有授權學長姐全程監督。</li>
+            <li><strong>為什麼不能穿拖鞋或洞洞鞋？</strong> 夏天或下大雨很多同學穿拖鞋來學校，但進 Lab 必須穿<strong>完全包覆足部的防滑鞋</strong>（規範第 4.6.3 條）！萬一裝滿鏈球菌或甲醇的玻璃瓶手滑砸在地上，穿拖鞋就是直接割傷加經皮感染。</li>
+            <li><strong>其他門禁與行為規矩</strong>：手搖飲跟食物請放門外個人置物櫃（規範 4.5.9、4.6.1）；皮膚有傷口先貼防水 OK 繃（4.6.6）；長髮束起（4.6.2）；實驗室大門隨時保持關閉上鎖（4.5.1），門口標示牌上的緊急聯絡人電話要維持最新狀態（管理辦法第 21 條）。</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《感染性生物材料管理辦法》第 21 條（p. 11）、第 24 條（p. 12–13）。</li>
+            <li>《實驗室生物安全規範》第 3.1.2、4.3.8、4.5.1、4.5.9、4.6.1～4.6.8 條（p. 28, 41–45）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》查核基準二、（四）（p. 46 註 2）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 04: PPE 穿脫順序與離場三大地雷
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Personal Protective Equipment · 個人防護裝備</div>
+        <h2>PPE 穿脫順序與離場三大地雷</h2>
+
+        <!-- Inline SVG: 極簡脫除順序流程圖 -->
+        <div class="svg-container">
+          <svg viewBox="0 0 920 96" width="100%" height="96" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="18" width="145" height="60" rx="3" fill="#F3EFEA" stroke="#DED8CE"/>
+            <text x="76" y="45" text-anchor="middle" font-size="14" fill="#6E6A64">Step 1</text>
+            <text x="76" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="#2C2C2C">脫外層髒手套</text>
+
+            <text x="163" y="54" text-anchor="middle" font-size="18" fill="#6E6A64">➔</text>
+
+            <rect x="178" y="18" width="145" height="60" rx="3" fill="#F3EFEA" stroke="#DED8CE"/>
+            <text x="250" y="45" text-anchor="middle" font-size="14" fill="#6E6A64">Step 2</text>
+            <text x="250" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="#2C2C2C">脫護目鏡／面罩</text>
+
+            <text x="337" y="54" text-anchor="middle" font-size="18" fill="#6E6A64">➔</text>
+
+            <rect x="352" y="18" width="145" height="60" rx="3" fill="#F3EFEA" stroke="#DED8CE"/>
+            <text x="424" y="45" text-anchor="middle" font-size="14" fill="#6E6A64">Step 3</text>
+            <text x="424" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="#2C2C2C">脫實驗衣＆口罩</text>
+
+            <text x="511" y="54" text-anchor="middle" font-size="18" fill="#6E6A64">➔</text>
+
+            <rect x="526" y="18" width="170" height="60" rx="3" fill="rgba(200,62,43,0.08)" stroke="#C83E2B" stroke-width="1.5"/>
+            <text x="611" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#C83E2B">關鍵 Step 4</text>
+            <text x="611" y="65" text-anchor="middle" font-size="16" font-weight="700" fill="#C83E2B">最後脫手套！</text>
+
+            <text x="710" y="54" text-anchor="middle" font-size="18" fill="#6E6A64">➔</text>
+
+            <rect x="725" y="18" width="190" height="60" rx="3" fill="rgba(58,90,64,0.1)" stroke="#3A5A40" stroke-width="1.5"/>
+            <text x="820" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#3A5A40">強制 Step 5</text>
+            <text x="820" y="65" text-anchor="middle" font-size="16" font-weight="700" fill="#3A5A40">免手動槽「濕洗手」</text>
+          </svg>
+        </div>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">專屬材質</span>
+            甲醇抽色素戴<strong>雙層丁腈（Nitrile）手套</strong>；開 $-80^\circ\text{C}$ 冰箱戴<strong>防凍手套 $+$ 全罩面罩</strong>
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">查核地雷 1</span>
+            脫完手套<strong>強制去免手動洗手槽「濕洗手」</strong>（只噴酒精乾洗手絕對不算數！）
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">查核地雷 2</span>
+            實驗衣嚴禁穿去買飯或上廁所，<strong>更絕對禁止塞進書包帶回宿舍／家裡洗！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>為什麼手套要最後脫？（規範第 4.5.12、4.5.13 條）</strong> 很多新手一做完實驗先把兩隻手套拔掉，再用光著的手去解開沾有細菌的實驗衣跟護目鏡——這樣手馬上又髒了！依規範第 4.5.12 條，應以最不會汙染皮膚與頭髮的方式脫除 PPE，<strong>「最後脫除手套」</strong>，脫完立刻洗手。</li>
+            <li><strong>手套材質與綠色實驗室精神</strong>：一般薄乳膠手套幾分鐘就會被甲醇穿透，所以做甲醇萃取一定要戴耐溶劑的<strong>丁腈（Nitrile）手套</strong>（建議雙層）。平時拿手套請愛惜耗材不浪費，但一旦沾到菌液或溶劑破損，就要立刻更換！</li>
+            <li><strong>衛生局查核委員必抓的兩大缺失（《115年查核作業手冊》p. 47–48）</strong>：
+              <ol>
+                <li><strong>酒精乾洗手不可取代濕洗手（p. 47）</strong>：出口必須設肘動、腳踏或感應式「免手動洗手槽」（規範 3.6.5），離開前一定要用洗手乳濕洗手（洗完隨手關緊水龍頭省水）。</li>
+                <li><strong>實驗衣禁止帶回家清洗（p. 48）</strong>：查核委員現場最愛抽問學生：「你的實驗衣怎麼洗？」千萬別回答帶回宿舍洗！實驗衣與便服須分開掛置（規範 4.5.8），若遭菌液汙染須先高壓滅菌除汙，再由實驗室統一送洗（4.8.5）。</li>
+              </ol>
+            </li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》第 3.6.5、3.6.6、4.4.1～4.4.4、4.5.8、4.5.12、4.5.13、4.8.5 條（p. 33, 42–44, 48）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》查核基準二、（一）及（四）（p. 38, 47–48）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 05: 鏈球菌四大常態實驗全流程風險地圖
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Workflow Overview · 常態實驗主線</div>
+        <h2>鏈球菌 (<em>Streptococcus</em> spp.) 四大實驗關卡</h2>
+
+        <!-- Inline SVG: 四大實驗關卡橫向風險地圖 -->
+        <div class="svg-container" style="margin-top: 42px;">
+          <svg viewBox="0 0 920 185" width="100%" height="185" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stage 1 -->
+            <rect x="6" y="10" width="205" height="155" rx="4" fill="#F3EFEA" stroke="#3A5A40" stroke-width="1.5"/>
+            <text x="108" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#3A5A40">STAGE 01</text>
+            <text x="108" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#2C2C2C">BHI 厭氧靜置培養</text>
+            <line x1="26" y1="90" x2="190" y2="90" stroke="#DED8CE"/>
+            <text x="108" y="116" text-anchor="middle" font-size="13.5" fill="#6E6A64">厭氧缸洩壓氣流擾動</text>
+            <text x="108" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C83E2B">⚠️ 移液氣膠＆禁明火</text>
+
+            <text x="223" y="92" text-anchor="middle" font-size="20" fill="#6E6A64">➔</text>
+
+            <!-- Stage 2 -->
+            <rect x="238" y="10" width="205" height="155" rx="4" fill="#F3EFEA" stroke="#3A5A40" stroke-width="1.5"/>
+            <text x="340" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#3A5A40">STAGE 02</text>
+            <text x="340" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#2C2C2C">分光光度計 OD550</text>
+            <line x1="258" y1="90" x2="422" y2="90" stroke="#DED8CE"/>
+            <text x="340" y="116" text-anchor="middle" font-size="13.5" fill="#6E6A64">跨出 BSC 至公用儀器區</text>
+            <text x="340" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C83E2B">⚠️ 比色管打翻＆髒手套</text>
+
+            <text x="455" y="92" text-anchor="middle" font-size="20" fill="#6E6A64">➔</text>
+
+            <!-- Stage 3 -->
+            <rect x="470" y="10" width="210" height="155" rx="4" fill="rgba(200,62,43,0.07)" stroke="#C83E2B" stroke-width="2"/>
+            <text x="575" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#C83E2B">STAGE 03 · 複合高危</text>
+            <text x="575" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#2C2C2C">甲醇萃取菌體色素</text>
+            <line x1="490" y1="90" x2="660" y2="90" stroke="#DED8CE"/>
+            <text x="575" y="116" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C83E2B">⚠️ 濃縮活菌氣膠</text>
+            <text x="575" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C83E2B">＋ 易燃毒性甲醇蒸氣</text>
+
+            <text x="692" y="92" text-anchor="middle" font-size="20" fill="#6E6A64">➔</text>
+
+            <!-- Stage 4 -->
+            <rect x="706" y="10" width="208" height="155" rx="4" fill="#F3EFEA" stroke="#3A5A40" stroke-width="1.5"/>
+            <text x="810" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#3A5A40">STAGE 04</text>
+            <text x="810" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#2C2C2C">-80°C 甘油冷凍保存</text>
+            <line x1="726" y1="90" x2="894" y2="90" stroke="#DED8CE"/>
+            <text x="810" y="116" text-anchor="middle" font-size="13.5" fill="#6E6A64">回溫正壓爆管噴濺</text>
+            <text x="810" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C83E2B">⚠️ RG2 簽核與每季盤點</text>
+          </svg>
+        </div>
+
+        <ul class="minimal-list" style="margin-top: 10px !important;">
+          <li>
+            <span class="tag-label tag-green">局部風險評鑑</span>
+            頭號隱形殺手是肉眼看不見的<strong>「感染性氣膠（Aerosol）」</strong>——任何步驟拿不準，<strong>先問學長姐！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務導覽】</strong></p>
+          <ul>
+            <li>大家進來做專題跟碩論，八成以上的時間都在跑這四個連續關卡：用 BHI 培養基把鏈球菌厭氧養大 $\rightarrow$ 用分光光度計測 $\text{OD}_{550}$ 看濃度夠不夠 $\rightarrow$ 高速離心加甲醇（$\text{CH}_3\text{OH}$）把色素抽出來 $\rightarrow$ 把菌加甘油凍進 $-80^\circ\text{C}$ 超低溫冷凍櫃。</li>
+            <li>在《實驗室生物安全規範》第 2.13 節裡，分析每個步驟哪裡會出事叫做<strong>「局部風險評鑑（Local Risk Assessment）」</strong>。這四關裡最大的共同敵人就是<strong>「感染性氣膠（Aerosol，名詞定義 #3）」</strong>——只要你搖晃、吹吸起泡、離心破管或摔破瓶子，微細的含菌液滴就會飄在空氣中被你吸進肺裡。</li>
+            <li><strong>新分離菌株 30 日規定（管理辦法第 18 條）</strong>：如果大家從臨床或環境檢體新檢出 RG2 鏈球菌，必須在<strong>檢出次日起 30 日內</strong>（能力試驗 90 日內）完成銷毀，或經生安主管審查及生安會審議通過後納入保存帳籍。</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《感染性生物材料管理辦法》第 3、17、18 條（p. 2, 9–10）。</li>
+            <li>《實驗室生物安全規範》名詞定義 #3（氣膠，p. 4）、#69（局部風險評鑑，p. 8）及第 2.13 節（p. 24–26）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 06: 關卡 1：BHI 厭氧靜置培養與 BSC 規範
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Stage 01 · BHI Anaerobic Static Culture</div>
+        <h2>關卡 1：BHI 厭氧培養與生物安全櫃 (BSC)</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">煮培養基先揪團</span>
+            BHI 分裝 $\le 75\%$ 容量、<strong>瓶蓋轉鬆半圈</strong>；開滅菌鍋前<strong>先招呼大家搭順風車！</strong>
+          </li>
+          <li>
+            <span class="tag-label tag-green">開缸開管進 BSC</span>
+            厭氧培養缸抱進 <strong>BSC 內</strong>再洩壓開蓋；Vortex 混勻後<strong>先靜置 1～2 分鐘</strong>再開蓋
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">忘掉高中生物課</span>
+            <strong>BSC 內絕對禁止點酒精燈！</strong>（改用拋棄式接種環；BSC 用完無人續用請隨手關機）
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>配 BHI 與滅菌順風車</strong>：BHI 粉末很貴，算準實驗要用的量再秤，別配一大瓶放著長黴。分裝時液面不超過瓶身 $75\%$，<strong>螺旋瓶蓋一定要轉鬆半圈</strong>再進 $121^\circ\text{C}$ 高壓滅菌鍋（慢速排氣模式防突沸）。最重要的是：<strong>滅菌前先在 Lab 群組喊一聲看誰要搭順風車一起滅，別只為了一兩瓶開一鍋浪費水電！</strong></li>
+            <li><strong>為什麼 BSC 裡絕對不能點酒精燈？（規範第 4.6.29 條）</strong> 大家以前上普通微生物課習慣點酒精燈燒接種環，但在生物安全櫃（BSC）裡<strong>嚴禁使用持續性明火</strong>！酒精燈的熱對流會把 BSC 垂直往下的保護氣幕沖亂，讓鏈球菌氣膠直接往你臉上吹，甚至會把頭頂昂貴的 HEPA 濾網（過濾 $99.97\%$ 之 $0.3\ \mu\text{m}$ 微粒）燒破！請全面改用拋棄式無菌塑膠接種環或紅外線加熱滅菌器。</li>
+            <li><strong>厭氧缸開蓋與防氣膠移液（規範第 4.6.19、4.6.23、4.6.32 條）</strong>：養了一整晚的 BHI 鏈球菌濃度高達 $10^8\sim 10^9\text{ CFU/mL}$。把厭氧缸從培養箱拿出來後，<strong>一定要整咖抱進 BSC 裡再洩壓開蓋</strong>。因為鏈球菌靜置培養常沉在管底，鎖緊蓋子搖勻或 Vortex 後，請<strong>在 BSC 內靜置 1～2 分鐘</strong>等氣膠沉降再開蓋；用 Filter Tips 貼著管壁慢吸慢放，嚴禁在液面下猛吹泡泡！</li>
+            <li><strong>BSC 定檢與隨手關機（規範第 5.1.5、5.1.6 條；查核手冊 p. 52）</strong>：BSC 開口最小平均流入風速須 $\ge 0.38\text{ m/s}$，每年依 CNS 15970 定檢（兩次間隔<strong>不得超過 15 個月</strong>）。用完擦完 $70\%$ 乙醇後，若沒人馬上要接手，請隨手把 BSC 風機與照明關掉節能！</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》第 4.6.19、4.6.23、4.6.29、4.6.32、5.1.5、5.1.6 條（p. 46–47, 54）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》p. 39、p. 52。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 07: 關卡 2：分光光度計 OD550 定量與安全移動
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Stage 02 · Spectrophotometer Quantification</div>
+        <h2>關卡 2：分光光度計 $\text{OD}_{550}$ 定量與安全移動</h2>
+
+        <div class="formula-band">
+          $$\text{Actual } \text{OD}_{550} = \text{Measured } \text{OD}_{550} \times \text{Dilution Factor} \quad (\text{Linear Range: } 0.1 \le \text{OD}_{550} \le 0.8)$$
+        </div>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">一定要加蓋</span>
+            在 BSC 內將菌液裝入<strong>附蓋密閉比色管（Capped Cuvette）</strong>並壓緊管蓋
+          </li>
+          <li>
+            <span class="tag-label tag-green">除汙放盒子</span>
+            用 <strong>$70\%$ 乙醇</strong>擦拭比色管外壁，放進<strong>附蓋防漏傳遞盒</strong>再端去儀器桌
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">公用儀器禮儀</span>
+            <strong>先換掉髒手套</strong>再按機器與電腦；測完若無人馬上續用<strong>請隨手關閉分光光度計電源！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>千萬別端著「無蓋比色管」滿場跑！（規範第 4.6.25、4.6.30 條）</strong> 分光光度計放在 BSC 外面的公用儀器桌。如果你把高濃度鏈球菌裝進沒有蓋子的開放式 Cuvette 就直接走出去，萬一走路絆倒或手滑摔破，就構成《意外事故指引》裡的<strong>「BSC 外潛在感染性氣膠釋放」</strong>，全 Lab 同學都要立刻撤離並封鎖現場 1 到 24 小時！</li>
+            <li><strong>安全測 $\text{OD}_{550}$ 三部曲</strong>：
+              <ol>
+                <li>在 BSC 內用無菌 BHI 稀釋菌液並裝入<strong>附密閉蓋之比色管（Capped Cuvette）</strong>（若用 96 孔盤則貼妥光學封板膜），壓緊蓋子。</li>
+                <li>在 BSC 內用沾有 <strong>$70\%$ 乙醇</strong>的擦鏡紙把比色管外壁擦乾淨完成表面除汙（規範 4.6.25），再放進有蓋子的<strong>防漏二次傳遞盒</strong>（規範 4.6.30）端去分光光度計。</li>
+                <li>測完後原封不動放回傳遞盒帶回 BSC 內處理，<strong>絕對禁止在分光光度計旁邊開蓋稀釋或把廢菌液倒進旁邊洗手槽！</strong></li>
+              </ol>
+            </li>
+            <li><strong>公用儀器防交叉汙染 ＆ 綠色實驗室隨手關機（規範第 3.1.2、4.6.8 條）</strong>：離開 BSC 去按公用分光光度計按鈕跟電腦鍵盤前，<strong>請先把剛才摸過菌管的外層髒手套脫掉或換新</strong>，別讓下一個沒戴手套用電腦的同學中鏢！全部測完後，問一下現場有沒有人馬上要接著測，若沒有，<strong>請隨手把分光光度計關機</strong>，節約能源也保護光學燈源！</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》第 3.1.2、4.6.8、4.6.23、4.6.25、4.6.30、4.6.32 條（p. 28, 45–47）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 08: 關卡 3：甲醇萃取色素之雙重複合風險
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker kicker-alert">Stage 03 · Compound Bio-Chemical Hazard</div>
+        <h2>關卡 3：甲醇 ($\text{CH}_3\text{OH}$) 萃取色素的雙重危機</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">離心安全杯鐵則</span>
+            離心管必須放進<strong>封閉式安全杯（Safety Cups）</strong>，且<strong>裝載與開蓋 100% 只能在 BSC 內！</strong>
+          </li>
+          <li>
+            <span class="tag-label tag-green">雙重密封振盪</span>
+            精準取用微量 $\text{CH}_3\text{OH}$、鎖緊管蓋纏 Parafilm，Vortex 後<strong>先靜置 2～3 分鐘</strong>再開蓋
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">BSC 濾網盲點</span>
+            循環式 BSC（Class II A2）之 <strong>HEPA 擋不住甲醇蒸氣！</strong>嚴禁大量敞開揮發或見明火
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀：這是整個實驗室風險最高的一關！】</strong></p>
+          <ul>
+            <li><strong>為什麼最危險？因為「活菌氣膠 ＋ 易燃毒性溶劑」雙重爆擊！</strong> 離心收集後的鏈球菌菌體沉澱（Pellet）濃度高達 $10^9\sim 10^{10}\text{ CFU/mL}$；同時甲醇（$\text{CH}_3\text{OH}$）閃火點只有 $11^\circ\text{C}$、沸點 $64.7^\circ\text{C}$、爆炸下限 $6.0\%$，吸入或噴入眼睛會造成代謝性酸中毒與視神經損傷。</li>
+            <li><strong>千萬別以為 BSC 萬能！</strong> 我們常見的 Class II A2 生物安全櫃會把 $70\%$ 氣流經過 HEPA 過濾後循環吹回櫃內、$30\%$ 排回室內。重點是：<strong>HEPA 過濾器只能攔截細菌微粒，完全無法過濾甲醇有機溶劑蒸氣！</strong> 如果你在循環式 BSC 裡倒一大杯甲醇敞開揮發，蒸氣累積遇到風機馬達火花就會引發氣爆，或吹向你臉部造成中毒（大量操作揮發性化學品必須使用 $100\%$ 全排氣且具防回噴設計之 Class II B2 型 BSC，規範第 3.7.3 條）。因此在 A2 BSC 內只能<strong>精準取用微量甲醇（不浪費藥劑也減少廢液）、隨開隨蓋，且絕對禁止任何明火或高溫熱源（規範 4.6.29）</strong>。</li>
+            <li><strong>離心機安全杯強制規定（規範第 4.6.27 條；意外事故指引三、(六) p. 3）</strong>：離心裝有鏈球菌的離心管時，<strong>必須裝入封閉式離心桶（安全杯 Safety Cups）或密封轉子，而且安全杯的「裝載」與「卸載（開蓋）」都必須在 BSC 內進行</strong>！嚴禁在離心機旁邊直接把安全杯打開。離心機用完若無人續用，一樣隨手關機節能。</li>
+            <li><strong>專屬 PPE 與洗眼器</strong>：戴<strong>雙層耐溶劑丁腈（Nitrile）手套</strong>與<strong>防化學噴濺護目鏡／全罩面罩</strong>，操作前先確認實驗室緊急洗眼器（規範 3.6.6）暢通無阻。</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》第 3.4.1、3.6.6、3.7.1、3.7.3、3.7.4、4.6.27、4.6.29 條（p. 31–34, 47）。</li>
+            <li>《實驗室生物安全意外事故及災害應變計畫指引》（115.06.23）三、（五）及（六）（p. 2–3）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 09: 關卡 4：-80°C 甘油冷凍保存與 RG2 管帳
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Stage 04 · Cryopreservation &amp; Biosecurity</div>
+        <h2>關卡 4：$-80^\circ\text{C}$ 甘油冷凍保存與 RG2 管帳</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">防爆管慢洩壓</span>
+            用附墊圈 <strong>PP 防爆冷凍管</strong>（裝 $\le 75\%$ 滿）；解凍時在 <strong>BSC 內包酒精紙巾慢轉洩壓</strong>
+          </li>
+          <li>
+            <span class="tag-label tag-green">先簽核再動手</span>
+            新增、保存、銷毀或分讓 RG2 菌株，<strong>必須先經生安主管審查＋生安會審議通過</strong>
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">每季對帳紅線</span>
+            冷凍櫃<strong>上鎖專人管</strong>、<strong>每 3 個月盤點一次</strong>；遺失少管須於<strong>確認次日起 7 日內報衛生局！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>解凍防爆管與冰箱節能習慣</strong>：
+              <ul>
+                <li>開 $-80^\circ\text{C}$ 超低溫冷凍櫃前，請先看準盒位配置圖（Box Map），打開門快狠準拿出來就馬上關門上鎖，別開著冰箱門站在那裡慢慢找管子——那樣超耗電又會害壓縮機結霜壞掉！</li>
+                <li>千萬別用一般 Eppendorf 微離心管凍 $-80^\circ\text{C}$（管蓋會脆化彈開），一定要用附矽膠墊圈的專用 PP 防爆冷凍小管（Cryovial）。</li>
+                <li>搬冷凍鐵架要戴<strong>防凍隔熱手套（Cryo-gloves）</strong>；拿出來解凍時戴<strong>全罩面罩</strong>，在 <strong>BSC 內拿沾有 $70\%$ 乙醇的紙巾包住管口，慢慢轉開半圈釋放內部正壓</strong>，防止爆管噴濺！</li>
+              </ul>
+            </li>
+            <li><strong>RG2 菌株不是你想留就留、想丟就丟！（管理辦法第 17、20、21、28 條；查核手冊 p. 44）</strong>：
+              <ul>
+                <li>只要保存超過 30 天就叫「長期保存」（規範定義 #70）。依《感染性生物材料管理辦法》第 17 條，欲持有、保存、使用、處分（新增或銷毀）或移轉 RG2 菌株，<strong>必須先經生物安全主管審查及生物安全會審議通過</strong>。如果不確定申請單怎麼寫，馬上問老師或學長姐！</li>
+                <li>$-80^\circ\text{C}$ 冷凍櫃須<strong>上鎖、專人管理</strong>（規範 4.6.20），每次領用都要登記，並<strong>每 3 個月（每季）辦理實地盤點</strong>（查核手冊 p. 44），紀錄保存至少 <strong>3 年</strong>（管理辦法第 26 條）。</li>
+                <li>萬一盤點發現品項或數量不符，且經生安主管調查確認為<strong>遺失、遭竊或原因不明</strong>者，設置單位必須於<strong>確認調查結果之次日起 7 日內報地方衛生局備查</strong>（管理辦法第 28 條）！跨單位運送則須符合 <strong>P620/P650 三層包裝規定</strong>（第 27、33 條）。</li>
+              </ul>
+            </li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《感染性生物材料管理辦法》第 4、17、18、20、21、26、27、28、33 條（p. 2, 9–15）。</li>
+            <li>《實驗室生物安全規範》名詞定義 #70（長期保存 $>30$ 天，p. 8）、第 4.6.20 條（p. 46）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》查核基準二、（一）及（二）（p. 40, 44–45）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 10: 實驗收攤：廢棄物分流與兩大致命禁忌
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker kicker-alert">Waste Segregation · 廢棄物分流處置</div>
+        <h2>實驗收攤：純生物垃圾 vs. 甲醇複合廢液</h2>
+
+        <!-- Inline SVG: 雙軌廢棄物分流圖 -->
+        <div class="svg-container">
+          <svg viewBox="0 0 920 150" width="100%" height="150" xmlns="http://www.w3.org/2000/svg">
+            <!-- Track 1: Bio Waste -->
+            <rect x="8" y="10" width="904" height="58" rx="3" fill="rgba(58,90,64,0.08)" stroke="#3A5A40" stroke-width="1.5"/>
+            <text x="28" y="45" font-size="16" font-weight="700" fill="#3A5A40">🟢 純生物廢棄物</text>
+            <text x="195" y="45" font-size="14.5" fill="#2C2C2C">（BHI 廢液、比色管、Tips）➔ 丟<tspan font-weight="700" fill="#3A5A40">腳踏式收集桶（禁手壓關蓋）</tspan> ➔ 送 <tspan font-weight="700">121°C 高壓滅菌</tspan></text>
+
+            <!-- Track 2: Methanol Waste -->
+            <rect x="8" y="82" width="904" height="58" rx="3" fill="rgba(200,62,43,0.08)" stroke="#C83E2B" stroke-width="1.5"/>
+            <text x="28" y="117" font-size="16" font-weight="700" fill="#C83E2B">🔴 含甲醇複合廢物</text>
+            <text x="205" y="117" font-size="14.5" fill="#2C2C2C">上清液除菌後入<tspan font-weight="700" fill="#C83E2B">醇類有機廢液桶</tspan> ｜ 管底菌體（Pellet）吸乾後以 <tspan font-weight="700">70% 乙醇泡 ≥ 30 min</tspan> 去活化</text>
+          </svg>
+        </div>
+
+        <ul class="minimal-list">
+          <li class="redline">
+            <span class="tag-label tag-red">致命紅線 1</span>
+            <strong>嚴禁將含甲醇之廢液或離心管送入高壓蒸氣滅菌鍋！</strong>（高溫密閉氣化將引發猛烈氣爆）
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">致命紅線 2</span>
+            <strong>嚴禁將甲醇與漂白水（次氯酸鈉）混合！</strong>（會劇烈反應產生劇毒氯仿 $\text{CHCl}_3$ 與氯氣 $\text{Cl}_2$）
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀：倒廢液前只要有一點點猶豫，馬上問學長姐！】</strong></p>
+          <ul>
+            <li><strong>垃圾桶蓋子也有法規？（《115年查核作業手冊》p. 43）</strong> 沒錯！衛生局查核基準明文規定：實驗室內的感染性廢棄物收集桶必須有蓋，且<strong>「不可以手壓關閉容器蓋」</strong>（必須用腳踏式或感應式掀蓋桶），避免髒手套碰觸桶蓋造成交叉汙染。廢棄物打包移出前，外表面須先噴灑消毒劑除汙（規範第 4.8.8 條）。</li>
+            <li><strong>化學消毒劑怎麼配、怎麼選？（《實驗室生物安全規範》第 2.14 節 p. 26–27）</strong>：
+              <ul>
+                <li><strong>$70\%$ 乙醇水溶液</strong>：對鏈球菌等生長型細菌最有效（濃度過高如 $95\%$ 會使表面蛋白瞬間凝結反而不利滲透），但<strong>對細菌孢子完全無效（$-$）</strong>。</li>
+                <li><strong>次氯酸鈉（漂白水）</strong>：日常表面消毒用 $0.05\%\sim 0.1\%$（$500\sim 1,000\text{ ppm}$）；處理高有機負荷之 BHI 廢菌液或溢灑則須提高至 <strong>$0.5\%$（$5,000\text{ ppm}$）</strong>作用至少 $30$ 分鐘（細菌孢子亦需 $\ge 30\text{ min}$）。注意漂白水會腐蝕不鏽鋼，擦完須以清水或酒精拭淨。</li>
+              </ul>
+            </li>
+            <li><strong>含甲醇複合廢棄物分流 SOP（保命關鍵）</strong>：
+              <ol>
+                <li><strong>含甲醇上清廢液</strong>：於 BSC 內確認高速離心無菌體（或經 $0.22\ \mu\text{m}$ 耐溶劑濾膜過濾除菌）後，倒入貼標之「醇類有機溶劑廢液桶」。<strong>絕對禁止倒水槽、絕對禁止進高壓滅菌鍋、絕對禁止加漂白水！</strong></li>
+                <li><strong>離心管底菌體殘渣（Pellet）</strong>：於 BSC 內吸淨殘餘甲醇並短暫揮發後，加入 <strong>$70\%$ 乙醇浸泡 $\ge 30$ 分鐘</strong>去活化菌體，傾出液體並確認管內無游離液態甲醇後，空管才可歸入感染性廢棄物袋送滅菌。</li>
+              </ol>
+            </li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全規範》第 2.14 節（p. 26–27）、第 3.7.11、4.8.1～4.8.8 條（p. 34, 48–49）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》查核基準二、（二）「實驗室廢棄物處理」（p. 43）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 11: 高壓蒸氣滅菌鍋：揪團順風車與生物指示劑 (BI) 確效
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Autoclave Validation · 滅菌確效與節能</div>
+        <h2>高壓滅菌鍋：揪團順風車與生物指示劑 (BI) 確效</h2>
+
+        <div class="formula-band">
+          $$\text{Sterility Assurance Level (SAL)} < 10^{-6} \qquad F_0 = \int_{0}^{t} 10^{\frac{T(t) - 121.1}{10}} \, dt$$
+        </div>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">滅菌搭順風車</span>
+            開鍋前<strong>先招呼全 Lab 有無人要湊鍋</strong>（別只滅一兩瓶浪費水電！袋口微開置於防漏盤）
+          </li>
+          <li>
+            <span class="tag-label tag-green">冷點芽孢挑戰</span>
+            定期將<strong>嗜熱脂肪芽孢桿菌（<em>G. stearothermophilus</em>）</strong>埋入最難滅菌的「冷點」確效
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">查核兩大鐵則</span>
+            熱研究須有<strong>連續 3 次成功紀錄</strong>；年度檢測與確效間隔<strong>不得超過 15 個月！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀】</strong></p>
+          <ul>
+            <li><strong>綠色實驗室好習慣——滅菌前先喊一聲搭順風車！</strong> 高壓滅菌鍋（$121^\circ\text{C}$、$\ge 30$ 分鐘）跑一趟非常耗水耗電。準備滅菌前，<strong>請先在 Lab 群組或現場問大家有沒有培養基或垃圾要一起滅</strong>，湊到適當的代表性負載量（注意不要塞爆超過最大裝載上限，且乾淨培養基跟感染性垃圾分開滅；滅菌袋口要微開讓飽和蒸氣穿入，千萬別綁死！）。</li>
+            <li><strong>為什麼貼了變色滅菌膠帶還不夠？（《滅菌過程確效作業指導手冊》第二章 p. 2–4；規範第 5.1.4 條）</strong>：
+              <ul>
+                <li>包外化學指示膠帶變色只代表「表面有碰到熱蒸氣」，不能證明袋子中心深處達到無菌保證水準 <strong>$\text{SAL} < 10^{-6}$</strong>！</li>
+                <li>依《滅菌過程確效作業指導手冊》第二章二、(一)（p. 3），溫度分佈與熱滲透試驗（使用經前後校正之熱探測器）<strong>必須有「連續三次成功」的結果</strong>。</li>
+                <li>依第二章三、(三)~(五)（p. 3–4）及規範第 5.1.4 條，必須定期將耐高溫之<strong>嗜熱脂肪芽孢桿菌（<em>Geobacillus stearothermophilus</em>，確認 $D$ 值與 $Z$ 值）生物指示劑（BI）</strong>埋入代表性負載量中<strong>最難滅菌的裝載產品及位置（冷點 Cold Spot）</strong>。滅菌後連同「未滅菌同批號陽性對照組」於 $55^\circ\text{C}\sim 60^\circ\text{C}$ 培養：滅菌組維持紫色（陰性 $-$，無菌生長）、陽性對照組變黃色混濁（陽性 $+$）才算確效合格！</li>
+              </ul>
+            </li>
+            <li><strong>開鍋防燙與 15 個月大限（查核手冊 p. 38、p. 52）</strong>：開鍋前確認壓力歸零、溫度降至 $80^\circ\text{C}$ 以下，穿戴<strong>長袖防熱隔熱手套與全罩面罩</strong>側身慢開鍋門。高壓滅菌器年度定期檢測與確效，兩次間隔<strong>絕對不得超過 15 個月</strong>！</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《滅菌過程確效作業指導手冊》第一章、第二章一至三（p. 2–4）。</li>
+            <li>《實驗室生物安全規範》名詞定義 #94、#108（p. 10–11）、第 3.7.14、3.7.15、4.8.10、4.8.11、5.1.4 條（p. 35, 49, 53）。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》查核基準二、（一）（p. 38）及建議事項表（p. 52）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 12: 意外翻車時的保命 SOP（三個黃金時間）
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker kicker-alert">Emergency Response · 緊急應變黃金時間</div>
+        <h2>意外翻車時的保命 SOP（記住這 3 個時間）</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-red">BSC 外摔破菌瓶</span>
+            全員立刻憋氣撤離、關門貼禁入牌，封鎖 <strong>1 小時</strong>（若無中央排氣系統封鎖 <strong>24 小時</strong>）
+          </li>
+          <li>
+            <span class="tag-label tag-red">離心機內破管</span>
+            未封閉轉子破管<strong>立刻關機、勿開蓋、靜置 30 分鐘</strong>（安全杯破管則整顆移回 BSC 處理）
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">溢灑清理與通報</span>
+            <strong>先蓋紙巾 $\rightarrow$ 再倒消毒劑 $\rightarrow$ 鑷子夾除</strong>（禁直接噴酒精！）；暴露 <strong>24 小時內</strong>通報衛生局與疾管署
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐實務叮嚀：萬一翻車，千萬別自己亂猜偷擦！立刻叫老師與學長姐！】</strong></p>
+          <p>依據衛福部 115.06.23 最新修訂《實驗室生物安全意外事故及災害應變計畫指引》第三節（p. 1–3）：</p>
+          <ul>
+            <li><strong>1. 在 BSC 外面摔破菌瓶（潛在感染性氣膠釋放，指引三、(三) p. 2）</strong>：
+              <ul>
+                <li>全室人員<strong>必須立即撤離受影響區域</strong>、隨手關門，立即通知實驗室主管及生物安全主管，並張貼「禁止進入」標示。</li>
+                <li>為使氣膠排出及較大微粒沉降，一定時間內（<strong>例如 1 小時內</strong>）嚴禁人員進入；<strong>如實驗室無中央排氣系統，應延長進入管制時間（例如 24 小時後）</strong>，再由生安主管指導穿戴防護衣與 N95 進場除汙。</li>
+              </ul>
+            </li>
+            <li><strong>2. 離心機內離心管破裂（指引三、(五)~(六) p. 2–3）</strong>：
+              <ul>
+                <li><strong>未封閉式離心桶破裂</strong>：運轉中疑似破裂<strong>立刻關機勿開蓋</strong>；若開蓋後才發現破裂，<strong>立刻把蓋子蓋回去，並靜置 30 分鐘</strong>使氣膠沉降！之後穿戴<strong>厚實防割橡膠手套</strong>，用鑷子或鑷子夾棉花清碎片；轉子與離心桶放入<strong>對設備無腐蝕性之去活性消毒劑（如 $70\%$ 乙醇）</strong>浸泡；離心機內腔以相同消毒劑<strong>擦拭兩次</strong>再以清水沖洗晾乾。</li>
+                <li><strong>封閉式安全杯（Safety Cups）內破裂</strong>：整顆移回 BSC 內微鬆開安全杯蓋送高壓滅菌（若含大量甲醇則於 BSC 內改用化學消毒法處理）。</li>
+              </ul>
+            </li>
+            <li><strong>3. 容器破裂與桌面溢灑（指引三、(四) p. 2）</strong>：
+              <ul>
+                <li>絕對不能拿噴瓶直接對著菌液噴（會激起次生氣膠）！必須<strong>先用抹布或吸水紙巾覆蓋 $\rightarrow$ 在紙巾上方倒上消毒劑作用 $\ge 30$ 分鐘 $\rightarrow$ 用鑷子夾除碎玻璃</strong>。</li>
+                <li><strong>若實驗紀錄表單或紙張被汙染</strong>：應先拍照或抄寫將資訊複製，<strong>並將受汙染原件丟棄至感染性廢棄物專用收集筒</strong>。</li>
+              </ul>
+            </li>
+            <li><strong>4. 法定通報與演習（規範第 4.9.8、4.9.9、4.10.10 條；管理辦法第 25 條）</strong>：發生人員暴露疑似染病須於 <strong>24 小時內</strong>向衛生局及疾管署通報，<strong>1 個月內</strong>完成追蹤報告，涉及病原體暴露或阻隔失效之事故紀錄<strong>至少存檔 10 年</strong>。實驗室每年辦理應變演習，每 3 年至少 1 次實地演習。</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《實驗室生物安全意外事故及災害應變計畫指引》（115.06.23）三、（一）至（六）（p. 1–3）。</li>
+            <li>《感染性生物材料管理辦法》第 25、26、28、29 條（p. 13–15）。</li>
+            <li>《實驗室生物安全規範》第 4.9.8、4.9.9、4.10.10 條（p. 50–51）。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           Slide 13: 結語：收工背起書包前的 1 分鐘 Check
+           ==================================================================== -->
+      <section>
+        <div class="slide-kicker">Daily Wrap-Up · 平安準時畢業</div>
+        <h2>收工背起書包前的 1 分鐘 Check</h2>
+
+        <ul class="minimal-list">
+          <li>
+            <span class="tag-label tag-green">隨手關機＆簽名</span>
+            確認不續用之儀器已<strong>隨手關機節能</strong>；BSC、離心機、滅菌鍋與 BI 紀錄本已簽名
+          </li>
+          <li>
+            <span class="tag-label tag-green">冰箱鎖好＆扣帳</span>
+            $-80^\circ\text{C}$ 甘油管領用已登記、<strong>每 3 個月定期盤點</strong>（所有紀錄留存 $\ge 3$ 年）
+          </li>
+          <li class="redline">
+            <span class="tag-label tag-red">永遠記住這句話</span>
+            查核未過可罰 <strong>1 萬～15 萬元</strong>或停用——<strong>有懷疑就先問老師與學長姐，千萬別自己猜！</strong>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          <p><strong>【學長姐最後叮嚀：每天離開 Lab 前的 1 分鐘清單】</strong></p>
+          <ul>
+            <li><strong>1. 綠色實驗室 Check</strong>：環顧四周，沒人要接著用的分光光度計、離心機、BSC、水浴槽都關機了嗎？滅菌鍋是不是湊好順風車才開的？水龍頭關緊了嗎？</li>
+            <li><strong>2. 法規紀錄與衛生局查核 Check</strong>：根據《115年查核作業手冊》（p. 3–6），地方衛生局每 4 年會對轄區所有 BSL-2 實驗室全數實地查核（每年抽查 $20\%$），所有訓練、庫存、處分、滅菌紀錄都要保存至少 <strong>3 年</strong>（管理辦法第 26 條；重大暴露事故紀錄至少 <strong>10 年</strong>）。若查核缺失屆期未改善，依《傳染病防治法》第 69 條及管理辦法第 31、32 條，可處新臺幣 <strong>1 萬元以上 15 萬元以下罰鍰</strong>，甚至勒令實驗室停用！</li>
+            <li><strong>3. 離場動作與保命心態 Check</strong>：實驗衣掛回專用區（沒塞進書包帶回家）了嗎？最後脫手套去免手動洗手槽「濕洗手」了嗎？最重要的是——<strong>只要心裡有一絲懷疑或不確定，馬上開口問老師、助教或學長姐，絕對不要自己亂猜！</strong>祝各位碩一新生與專題生在 Lab 做實驗順順利利、平安準時畢業！</li>
+          </ul>
+          <p><strong>【法規條文出處】</strong></p>
+          <ul>
+            <li>《感染性生物材料管理辦法》第 20、21、26、31、32 條（p. 11, 13, 15）及《傳染病防治法》第 69 條。</li>
+            <li>《115年BSL-2實驗室暨RG2保存場所查核作業手冊》伍、作業程序（p. 3–6）及附件四、五（p. 36–52）。</li>
+          </ul>
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 講者備忘錄浮動切換按鈕與抽屜（方便直接於單一視窗預覽 <aside class="notes"> 內容，亦支援按 S 開啟原生視窗） -->
+  <button class="notes-toggle-btn" id="notesToggleBtn" title="切換顯示本頁講者備忘錄與法規出處 (或按鍵盤 S)">
+    📖 顯示／隱藏本頁學長姐講稿與法規出處 (Speaker Notes)
+  </button>
+  <div class="notes-drawer" id="notesDrawer">
+    <h4>🎙️ 本頁講者備忘錄（<code>&lt;aside class="notes"&gt;</code> 內容預覽）</h4>
+    <div id="notesDrawerContent"></div>
+  </div>
+
+  <!-- Reveal.js Core & Plugins (CDN) + MathJax 3 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+
+  <script>
+    // 初始化 Reveal.js 並啟用 RevealNotes 與 RevealMath.MathJax3
+    Reveal.initialize({
+      width: 1120,
+      height: 700,
+      margin: 0.06,
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'fade',
+      mathjax3: {
+        mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+      },
+      plugins: [RevealNotes, RevealMath.MathJax3]
+    });
+
+    // 同步當前投影片之 <aside class="notes"> 內容至左下角可收合抽屜，方便離線或 GitHub Pages 單視窗檢視
+    const notesBtn = document.getElementById('notesToggleBtn');
+    const notesDrawer = document.getElementById('notesDrawer');
+    const notesContent = document.getElementById('notesDrawerContent');
+
+    function syncSlideNotes() {
+      const currentSlide = Reveal.getCurrentSlide();
+      if (!currentSlide) return;
+      const aside = currentSlide.querySelector('aside.notes');
+      notesContent.innerHTML = aside ? aside.innerHTML : '<p>本頁無備忘錄。</p>';
+    }
+
+    notesBtn.addEventListener('click', () => {
+      notesDrawer.classList.toggle('open');
+      syncSlideNotes();
+    });
+
+    Reveal.on('ready', syncSlideNotes);
+    Reveal.on('slidechanged', syncSlideNotes);
+  </script>
+</body>
+</html>
